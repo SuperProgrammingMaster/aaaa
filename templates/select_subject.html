@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>과목 선택</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+  <style>
+    .add-card-button {
+      margin-top: 30px;
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+
+    .add-card-button:hover {
+      background-color: #45a049;
+    }
+
+    .button-container {
+      text-align: center;
+    }
+
+    .toggle-button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #ccc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .toggle-button.on {
+      background-color: #4CAF50;
+    }
+
+    .toggle-button.off {
+      background-color: #ccc;
+    }
+
+    .toggle-button:hover {
+      filter: brightness(0.95);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📚 과목을 선택하세요</h1>
+    <ul class="subject-list">
+      {% for subject in subjects %}
+      <li><a href="{{ url_for('file_selector', subject=subject) }}">{{ subject }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <div class="button-container">
+      <a href="{{ url_for('new_set') }}" class="add-card-button">📋 카드 세트 관리</a>
+
+      <!-- 순차모드 ON/OFF 버튼 -->
+      <button id="toggle-button" class="toggle-button off">순차모드 OFF</button>
+    </div>
+
+    <script>
+      const toggleBtn = document.getElementById('toggle-button');
+
+      toggleBtn.addEventListener('click', async () => {
+        const isOn = toggleBtn.classList.contains('on');
+        const newState = isOn ? 'off' : 'on';
+
+        // UI 상태 전환
+        toggleBtn.classList.toggle('on');
+        toggleBtn.classList.toggle('off');
+        toggleBtn.textContent = `순차모드 ${newState.toUpperCase()}`;
+
+        // 서버에 POST 요청 보내기
+        try {
+          await fetch("{{ url_for('set_sequential_mode') }}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `sequential=${newState}`
+          });
+        } catch (error) {
+          alert("서버 통신 실패 😥");
+          console.error(error);
+        }
+      });
+    </script>
+  </div>
+</body>
+</html>

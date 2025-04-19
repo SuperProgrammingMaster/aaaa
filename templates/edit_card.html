@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ 모바일 대응 -->
+  <title>카드 수정</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      padding: 60px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .edit-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .card-box {
+      background-color: #fafafa;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    button {
+      align-self: flex-end;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-size: 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      color: #007bff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* 📱 모바일 반응형 스타일 */
+    @media (max-width: 480px) {
+      .edit-container {
+        padding: 24px 16px;
+        border-radius: 10px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+      }
+
+      .card-box {
+        padding: 16px;
+      }
+
+      input[type="text"], textarea {
+        font-size: 14px;
+        padding: 9px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 9px 14px;
+      }
+
+      a {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="edit-container">
+    <h1>✏️ 카드 수정</h1>
+    <p><strong>{{ subject }}</strong> / <strong>{{ filename }}.json</strong></p>
+
+    {% if cards %}
+      {% for card in cards %}
+        <div class="card-box">
+          <form method="post">
+            <input type="hidden" name="original_question" value="{{ card.question }}">
+            <label>질문:</label>
+            <input type="text" name="question" value="{{ card.question }}" required>
+            <label>답변:</label>
+            <textarea name="answer" rows="2" required>{{ card.answer }}</textarea>
+            <button type="submit">수정</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>수정할 카드가 없습니다.</p>
+    {% endif %}
+
+    <a href="{{ url_for('add_card', subject=subject, filename=filename) }}">← 카드 추가 화면으로 돌아가기</a>
+  </div>
+</body>
+</html>

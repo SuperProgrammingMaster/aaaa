@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퀴즈 완료</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1 class="congrats">🎉 축하합니다! 모든 문제를 맞히셨습니다! 🎉</h1>
+    
+    <div class="button-group">
+      <a href="{{ url_for('restart_cycle') }}" class="restart-btn">새로운 사이클 시작하기</a>
+      <a href="{{ url_for('subject_selector') }}" class="subject-btn">과목 다시 선택하기</a>
+      <a href="{{ url_for('show_stats') }}" class="restart-btn">📊 통계 보기</a>
+    </div>
+  </div>
+
+  <!-- ✅ 효과음 삽입 -->
+  <audio autoplay>
+    <source src="{{ url_for('static', filename='success.mp3') }}" type="audio/mpeg">
+    브라우저가 오디오 태그를 지원하지 않습니다.
+  </audio>
+</body>
+</html>

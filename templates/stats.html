@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ 뷰포트 추가 -->
+  <title>학습 통계</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      padding: 60px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .stats-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .stat {
+      font-size: 18px;
+      margin: 12px 0;
+      color: #555;
+    }
+
+    .stat strong {
+      color: #000;
+    }
+
+    a {
+      display: block;
+      margin-top: 24px;
+      color: #007bff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* 📱 모바일 반응형 */
+    @media (max-width: 480px) {
+      .stats-container {
+        padding: 24px 18px;
+        border-radius: 10px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+      }
+
+      .stat {
+        font-size: 16px;
+        margin: 10px 0;
+      }
+
+      a {
+        font-size: 13px;
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stats-container">
+    <h1>📊 학습 통계</h1>
+    <div class="stat">정답률: <strong>{{ accuracy }}%</strong></div>
+    <div class="stat">오답률: <strong>{{ mistake_rate }}%</strong></div>
+
+    <a href="{{ url_for('restart_cycle') }}" class="restart-btn">🔄 새로운 사이클 시작하기</a>
+    <a href="{{ url_for('subject_selector') }}" class="subject-btn">← 과목 다시 선택하기</a>
+  </div>
+</body>
+</html>

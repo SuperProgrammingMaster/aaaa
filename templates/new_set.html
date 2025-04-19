@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카드 세트 관리</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .card-container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #333;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #444;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    @media (max-width: 480px) {
+      .card-container {
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+
+      select, input[type="text"], button {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      button {
+        padding: 10px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <h1>📋 카드 세트 관리</h1>
+    <form method="post">
+      <label for="mode">작업 선택</label>
+      <select name="mode" id="mode" required onchange="toggleForm()">
+        <option value="create">🆕 새 세트 만들기</option>
+        <option value="edit">✏️ 기존 세트 수정</option>
+      </select>
+
+      <!-- 새 세트 만들기 폼 -->
+      <div id="create-form">
+        <label for="subject">과목 선택</label>
+        <select name="subject" id="subject">
+          {% for subject in subjects %}
+          <option value="{{ subject }}">{{ subject }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="filename">파일 이름 (확장자 없이)</label>
+        <input type="text" name="filename" id="filename">
+      </div>
+
+      <!-- 기존 세트 수정 폼 -->
+      <div id="edit-form" style="display: none;">
+        <label for="edit-subject">과목 선택</label>
+        <select name="edit_subject" id="edit-subject" onchange="updateSetOptions()">
+          <option value="">과목을 선택하세요</option>
+          {% for subject in subjects %}
+          <option value="{{ subject }}">{{ subject }}</option>
+          {% endfor %}
+        </select>
+
+        <div id="set-select-wrapper" style="display: none;">
+          <label for="existing_set">기존 세트 선택</label>
+          <select name="existing_set" id="existing_set">
+            <!-- JS로 세트 옵션 채워짐 -->
+          </select>
+        </div>
+      </div>
+
+      <button type="submit">확인</button>
+    </form>
+  </div>
+
+  <script>
+    const allSets = JSON.parse('{{ sets_by_subject | tojson | safe }}');
+
+    function toggleForm() {
+      const mode = document.getElementById("mode").value;
+      const createForm = document.getElementById("create-form");
+      const editForm = document.getElementById("edit-form");
+
+      if (mode === "create") {
+        createForm.style.display = "block";
+        editForm.style.display = "none";
+      } else {
+        createForm.style.display = "none";
+        editForm.style.display = "block";
+      }
+    }
+
+    function updateSetOptions() {
+      const subject = document.getElementById("edit-subject").value;
+      const setSelectWrapper = document.getElementById("set-select-wrapper");
+      const setSelect = document.getElementById("existing_set");
+
+      setSelect.innerHTML = ""; // 초기화
+
+      if (subject && allSets[subject]) {
+        allSets[subject].forEach(setName => {
+          const option = document.createElement("option");
+          option.value = setName;
+          option.textContent = setName;
+          setSelect.appendChild(option);
+        });
+        setSelectWrapper.style.display = "block";
+      } else {
+        setSelectWrapper.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>

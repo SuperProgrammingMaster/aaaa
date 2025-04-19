@@ -1,0 +1,163 @@
+/* 기본 스타일 */
+:root {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --accent-color: #00bcd4;
+    --hover-color: #26c6da;
+    --border-color: #333;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .container {
+    width: 90%;
+    max-width: 600px;
+    background: #1e1e1e;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--accent-color);
+  }
+  
+  .subject-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .subject-list li {
+    margin: 1rem 0;
+  }
+  
+  .subject-list a {
+    display: block;
+    padding: 0.8rem 1.2rem;
+    background-color: #2a2a2a;
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+  }
+  
+  .subject-list a:hover {
+    background-color: var(--hover-color);
+    color: #000;
+    transform: scale(1.05);
+  }
+  
+  /* 모바일 대응 */
+  @media (max-width: 480px) {
+    .container {
+      padding: 1.2rem;
+    }
+  
+    h1 {
+      font-size: 1.5rem;
+    }
+  
+    .subject-list a {
+      font-size: 1rem;
+      padding: 0.6rem 1rem;
+    }
+  }
+  .congrats {
+    font-size: 1.8rem;
+    color: #76ff03;
+    margin-bottom: 2rem;
+    animation: pop 0.6s ease-out;
+  }
+  
+  .restart-btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: var(--accent-color);
+    color: #000;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .restart-btn:hover {
+    background-color: var(--hover-color);
+    transform: scale(1.05);
+  }
+  
+  @keyframes pop {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  
+  .restart-btn,
+  .subject-btn {
+    background-color: #4caf50;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .subject-btn {
+    background-color: #2196f3;
+  }
+  
+  .restart-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .subject-btn:hover {
+    background-color: #1e88e5;
+  }
+  .listening-toggle {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  #toggleListening {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  #toggleListening:hover {
+    background-color: #45a049;
+  }
+  
+  
+  

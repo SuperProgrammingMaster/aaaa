@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카드 추가하기</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      background-color: #f4f6fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card-add-container {
+      background-color: #fff;
+      padding: 40px 35px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      max-width: 500px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    p {
+      text-align: center;
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      resize: none;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+      line-height: 1.5;
+    }
+
+    textarea:focus {
+      border-color: #409eff;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      background-color: #409eff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2e80d7;
+    }
+
+    .link-group {
+      margin-top: 25px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .link-group a {
+      color: #409eff;
+      font-size: 14px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .link-group a:hover {
+      text-decoration: underline;
+    }
+
+    /* 📱 모바일 반응형 */
+    @media (max-width: 480px) {
+      .card-add-container {
+        padding: 24px 18px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
+
+      p {
+        font-size: 13px;
+        margin-bottom: 24px;
+      }
+
+      label {
+        font-size: 13px;
+      }
+
+      textarea {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 11px;
+      }
+
+      .link-group {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .link-group a {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card-add-container">
+    <h1>➕ 카드 추가하기</h1>
+    <p><strong>{{ subject }}</strong> / <strong>{{ filename }}.json</strong></p>
+
+    <form method="post">
+      <label for="question">질문</label>
+      <textarea name="question" id="question" rows="2" wrap="soft" placeholder="예: 지구는 어떤 행성인가요?" required></textarea>
+
+      <label for="answer">답변</label>
+      <textarea name="answer" id="answer" rows="3" wrap="soft" placeholder="예: 태양계의 세 번째 행성" required></textarea>
+
+      <button type="submit">💾 저장하고 계속 추가</button>
+    </form>
+
+    <div class="link-group">
+      <a href="{{ url_for('delete_card', subject=subject, filename=filename) }}">🗑️ 카드 삭제하러 가기</a>
+      <a href="{{ url_for('edit_card', subject=subject, filename=filename) }}">✏️ 카드 수정</a>
+      <a href="{{ url_for('subject_selector') }}">← 돌아가기</a>
+    </div>
+  </div>
+</body>
+</html>

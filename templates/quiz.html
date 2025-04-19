@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>플래시카드 퀴즈</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #121212;
+      color: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .card {
+      background-color: #1e1e1e;
+      padding: 2.2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      max-width: 90%;
+      width: 420px;
+      text-align: center;
+      animation: fadeIn 0.6s ease forwards;
+      opacity: 0;
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+    }
+    input[type="text"],
+    textarea {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 2px solid #333;
+      border-radius: 10px;
+      background-color: #1c1c1c;
+      color: #f1f1f1;
+      width: 90%;
+      margin-bottom: 1.2rem;
+      box-sizing: border-box;
+      transition: border 0.2s, box-shadow 0.3s;
+    }
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #4caf50;
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+    button {
+      padding: 0.75rem 1.6rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      margin: 0.3rem;
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    button:hover {
+      background-color: #66bb6a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    #next-button {
+      display: inline-block;
+      background-color: #2196f3;
+    }
+    #next-button:hover {
+      background-color: #42a5f5;
+    }
+    .feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      background-color: #1a1a1a;
+      border-left: 4px solid #666;
+      transition: all 0.3s ease;
+    }
+    #speaker-container {
+      margin-top: 1rem;
+      display: none;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 0.8rem;
+      background-color: #1e1e1e;
+    }
+    #speaker-container button {
+      background-color: #ff9800;
+    }
+    #speaker-container button:hover {
+      background-color: #ffb74d;
+    }
+    #show-answer-button {
+      background-color: #9c27b0;
+    }
+    #show-answer-button:hover {
+      background-color: #ba68c8;
+    }
+    /* 스타일링: 슬라이더 영역 */
+    .speed-control {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .speed-control label {
+      margin-right: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .speed-control input[type="range"] {
+      -webkit-appearance: none;
+      width: 150px;
+      height: 6px;
+      background: #333;
+      border-radius: 5px;
+      outline: none;
+      margin-right: 0.5rem;
+    }
+    .speed-control input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #4caf50;
+      cursor: pointer;
+      border: 2px solid #1e1e1e;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-20px); }
+    }
+    .fade-out {
+      animation: fadeOut 0.5s forwards;
+    }
+    @media (max-width: 480px) {
+      .card {
+        padding: 1.5rem;
+        width: 95%;
+      }
+      .question {
+        font-size: 1.1rem;
+      }
+    }
+    @keyframes fadeInHint {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOutHint {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+    .hint-fade-in {
+      animation: fadeInHint 0.4s ease forwards;
+    }
+    .hint-fade-out {
+      animation: fadeOutHint 0.4s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="question" id="question-text">{{ question }}</div>
+    <textarea 
+      id="user-answer" 
+      name="no_autofill_123" 
+      placeholder="정답을 입력하세요" 
+      autocomplete="off" 
+      rows="4" 
+      cols="50" 
+      wrap="soft"
+      onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); submitAnswer();}"
+      style="white-space: pre-wrap;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 1rem;
+            line-height: 1.5;
+            padding: 0.75rem 1rem;
+            resize: none;
+            background-color: #1c1c1c;
+            color: #f1f1f1;
+            border: 2px solid #333;
+            border-radius: 10px;
+            width: 90%;
+            margin-bottom: 1.2rem;
+            box-sizing: border-box;
+            transition: border 0.2s, box-shadow 0.3s;">
+    </textarea>
+    <div>
+      <button onclick="submitAnswer()">제출</button>
+      <button id="next-button" onclick="nextCard()">다음</button>
+    </div>
+    <div id="feedback" class="feedback"></div>
+    <!-- 소리 재생과 속도 조절 컨테이너 -->
+    <div id="speaker-container">
+      <button onclick="readAnswer()">🔊 정답 읽기</button>
+      <div class="speed-control">
+        <label for="speed-slider">말하기 속도:</label>
+        <input type="range" id="speed-slider" min="0.5" max="2" step="0.1" value="1">
+        <span id="speed-value">1.0</span>
+      </div>
+    </div>
+    <div>
+      <button id="show-answer-button" onclick="showHint(true)">💡 힌트 보기</button>
+    </div>
+  </div>
+
+  <script>
+  const correctAnswer = JSON.parse('{{ answer | tojson | safe }}');
+  const questionText = JSON.parse('{{ question | tojson | safe }}');
+  const listenMode = "{{ 'true' if listen_mode else 'false' }}" === "true";
+  
+  let isAnswered = false;
+  let selectedVoice = null;
+  
+  // 슬라이더 값 표시 업데이트
+  const speedSlider = document.getElementById('speed-slider');
+  const speedValueDisplay = document.getElementById('speed-value');
+  if(speedSlider && speedValueDisplay) {
+    speedSlider.addEventListener('input', () => {
+      speedValueDisplay.textContent = parseFloat(speedSlider.value).toFixed(1);
+    });
+  }
+
+  async function submitAnswer() {
+    if (isAnswered || listenMode) return; // 듣기 모드면 입력 차단
+    const userAnswer = document.getElementById('user-answer').value;
+    const response = await fetch('/check_answer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_answer: userAnswer,
+        correct_answer: correctAnswer,
+        question: questionText
+      })
+    });
+    const result = await response.json();
+    const feedback = document.getElementById('feedback');
+    const correctSound = document.getElementById('correct-sound');
+    const wrongSound = document.getElementById('wrong-sound');
+
+    if (result.correct) {
+      feedback.textContent = `✅ 정답! 정답: ${correctAnswer} (유사도: ${result.similarity.toFixed(2)})`;
+      feedback.style.color = '#4caf50';
+      correctSound.volume = 0.5;
+      correctSound.play();
+    } else {
+      feedback.textContent = `❌ 오답! 정답: ${correctAnswer} (유사도: ${result.similarity.toFixed(2)})`;
+      feedback.style.color = '#f44336';
+      wrongSound.volume = 0.5;
+      wrongSound.play();
+    }
+
+    isAnswered = true;
+    document.getElementById('speaker-container').style.display = 'block';
+  }
+
+  function nextCard() {
+    const card = document.getElementById('card');
+    card.classList.add('fade-out');
+    setTimeout(() => {
+      window.location.href = "/quiz";
+    }, 500);
+  }
+
+  function readAnswer() {
+    const text = correctAnswer.replaceAll("^", "승").replaceAll("-","마이너스");
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ko-KR';
+    // 슬라이더 값에 따라 속도 설정
+    utterance.rate = parseFloat(document.getElementById('speed-slider').value) || 1;
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+    speechSynthesis.speak(utterance);
+  }
+
+  function speak(text, callback) {
+    const utterance = new SpeechSynthesisUtterance(text.replaceAll("^", "승").replaceAll("-","마이너스"));
+    utterance.lang = 'ko-KR';
+    utterance.rate = parseFloat(document.getElementById('speed-slider').value) || 1;
+    if (selectedVoice) utterance.voice = selectedVoice;
+    if (callback) utterance.onend = callback;
+    speechSynthesis.speak(utterance);
+  }
+
+  function loadVoices() {
+    const voices = speechSynthesis.getVoices();
+    selectedVoice = voices.find(v => v.lang === 'ko-KR' && v.name.includes('Google')) ||
+                    voices.find(v => v.lang === 'ko-KR') ||
+                    voices[0];
+  }
+
+  function showHint(sex) {
+    const feedback = document.getElementById('feedback');
+    if (isAnswered) return;
+
+    const hintText = `📌 정답: ${correctAnswer}`;
+    feedback.textContent = hintText;
+    feedback.style.color = '#ffc107';
+    feedback.classList.remove('hint-fade-out');
+    feedback.classList.add('hint-fade-in');
+
+    document.getElementById('show-answer-button').disabled = true;
+
+    if(sex) {
+      setTimeout(() => {
+        feedback.classList.remove('hint-fade-in');
+        feedback.classList.add('hint-fade-out');
+        setTimeout(() => {
+          feedback.textContent = '';
+          feedback.classList.remove('hint-fade-out');
+          document.getElementById('show-answer-button').disabled = false;
+        }, 400);
+      }, 3000);
+    }
+  }
+
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+
+  // 듣기 모드 동작
+  window.addEventListener('DOMContentLoaded', () => {
+    if (listenMode) {
+      showHint(false);
+      const input = document.getElementById('user-answer');
+      const submitBtn = document.querySelector('button[onclick="submitAnswer()"]');
+      const hintBtn = document.getElementById('show-answer-button');
+
+      // 인터랙션 비활성화
+      if (input) input.disabled = true;
+      if (submitBtn) submitBtn.disabled = true;
+      if (hintBtn) hintBtn.disabled = true;
+
+      // 읽기 흐름: 문제 → 정답 읽기 → 자동 이동
+      speak(questionText, () => {
+        setTimeout(() => {
+          speak(`정답은 ${correctAnswer} 입니다`, () => {
+            setTimeout(() => {
+              nextCard();
+            }, 500);
+          });
+        }, 500);
+      });
+    }
+  });
+  </script>
+  
+  <audio id="correct-sound" src="{{ url_for('static', filename='sounds/correct.mp3') }}"></audio>
+  <audio id="wrong-sound" src="{{ url_for('static', filename='sounds/wrong.mp3') }}"></audio>
+</body>
+</html>

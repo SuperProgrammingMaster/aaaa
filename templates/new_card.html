@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ 모바일 대응 -->
+  <title>새 카드 만들기</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .card-form-container {
+      background-color: #ffffff;
+      padding: 40px 35px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 32px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus {
+      border-color: #409eff;
+      outline: none;
+      background-color: #fdfefe;
+    }
+
+    .form-actions {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #409eff;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.25s;
+    }
+
+    button:hover {
+      background-color: #2e80d7;
+    }
+
+    a {
+      text-align: center;
+      color: #409eff;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* 📱 모바일 반응형 스타일 */
+    @media (max-width: 480px) {
+      .card-form-container {
+        padding: 24px 20px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-bottom: 24px;
+      }
+
+      label {
+        font-size: 13px;
+      }
+
+      input[type="text"] {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 15px;
+        padding: 10px;
+      }
+
+      a {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card-form-container">
+    <h1>➕ 새 카드 만들기</h1>
+    <form method="post">
+      <label for="question">질문</label>
+      <input type="text" id="question" name="question" placeholder="예: 지구는 태양계 몇 번째 행성인가요?" required>
+
+      <label for="answer">답변</label>
+      <input type="text" id="answer" name="answer" placeholder="예: 세 번째 행성" required>
+
+      <div class="form-actions">
+        <button type="submit">💾 카드 저장</button>
+        <a href="{{ url_for('quiz_page') }}">← 퀴즈 페이지로 돌아가기</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

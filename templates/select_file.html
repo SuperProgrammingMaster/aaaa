@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카드 파일 선택</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+  <style>
+    .listening-toggle {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #toggleListening {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #toggleListening:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📂 <strong>{{ subject }}</strong>에서 파일 선택</h1>
+    <ul class="subject-list">
+      {% for file in files %}
+      <li><a href="{{ url_for('load_cards', subject=subject, filename=file) }}">{{ file }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <div class="listening-toggle">
+      <button id="toggleListening">🎧 듣기 모드: OFF</button>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('toggleListening');
+    let listening = false;
+
+    toggleBtn.addEventListener('click', async () => {
+    listening = !listening;
+    toggleBtn.textContent = listening ? '🎧 듣기 모드: ON' : '🎧 듣기 모드: OFF';
+
+    // 서버로 listen_mode 값 전송
+    try {
+        const response = await fetch('/set_listen_mode', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ listen_mode: listening }),
+        });
+
+        const result = await response.json();
+        if (result.status === 'ok') {
+            console.log('서버에 설정이 성공적으로 전달되었습니다.');
+        } else {
+            console.error('서버에서 에러 발생');
+        }
+    } catch (error) {
+        console.error('서버 요청 중 오류 발생:', error);
+    }
+
+    // 상태 출력
+    console.log('듣기 모드:', listening ? 'ON' : 'OFF');
+});
+  </script>
+</body>
+</html>

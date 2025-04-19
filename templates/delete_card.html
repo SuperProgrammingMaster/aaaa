@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ 모바일 대응 -->
+  <title>카드 삭제</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+    }
+
+    .delete-container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    p {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .card-box {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      background-color: #fafafa;
+    }
+
+    .card-box strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    form {
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #c0392b;
+    }
+
+    a {
+      display: block;
+      margin-top: 30px;
+      text-align: center;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* 📱 모바일 반응형 스타일 */
+    @media (max-width: 480px) {
+      .delete-container {
+        padding: 24px 18px;
+        border-radius: 10px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+      }
+
+      .card-box {
+        padding: 12px 14px;
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+
+      p, a {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="delete-container">
+    <h1>🗑️ 카드 삭제</h1>
+    <p><strong>{{ subject }}</strong> / <strong>{{ filename }}.json</strong></p>
+
+    {% if cards %}
+      {% for card in cards %}
+      <div class="card-box">
+        <strong>Q:</strong> {{ card.question }}<br>
+        <strong>A:</strong> {{ card.answer }}
+        <form method="post">
+          <input type="hidden" name="question" value="{{ card.question }}">
+          <button type="submit">삭제</button>
+        </form>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p>카드가 없습니다.</p>
+    {% endif %}
+
+    <a href="{{ url_for('add_card', subject=subject, filename=filename) }}">← 카드 추가 화면으로 돌아가기</a>
+  </div>
+</body>
+</html>
